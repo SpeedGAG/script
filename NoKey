@@ -1,4 +1,5 @@
 loadstring(game:HttpGet("https://pastefy.app/miEZWb1b/raw"))()
+
 ‎local Players = game:GetService("Players")
 ‎local UIS = game:GetService("UserInputService")
 ‎local TweenService = game:GetService("TweenService")
